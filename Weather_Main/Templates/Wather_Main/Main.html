@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container-fluid bg-dark p-3 text-center text-white">
+    <h1>Weather Station</h1>
+    <p>It is well known that OpenWeatherMap weather project products from OpenWeather are particularly popular with students and novice developers.</p>
+</div>
+
+<div class="container">
+
+    <div>
+        <form method="POST">{% csrf_token %}
+            <div class="row">
+                <div class="col-6">
+                    {{ Form|crispy }}
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col">
+                    <button type="submit" class="btn btn-secondary">Submit</button>
+                </div>
+            </div>
+            {% if Msg %}
+            <div class="alert {{ Msg_Class }}">
+                {{ Msg }}
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div>
+        {% for City_Detail in Weather_Detail %}
+        <div class="media border p-3 mb-2">
+            <img src="http://openweathermap.org/img/w/{{ City_Detail.Icon }}.png" alt="Weather Icon" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+            <div class="media-body">
+                <div>
+                    <div class="float-right">
+                        <a href="{% url 'delete_city' City_Detail.City %}">
+                            <button class="glyphicon glyphicon-remove"> </button>
+                        </a>
+                    </div>
+                    <h4>{{City_Detail.City}} <small><i>{{City_Detail.Temperature}}° F</i></small></h4>
+                    <p>{{City_Detail.Description}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}
